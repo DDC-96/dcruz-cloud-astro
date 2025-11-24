@@ -2,14 +2,6 @@
 
 This repository contains the source code for "Infra as Thoughts," a personal technical blog focused on IT Systems Engineering, automation workflows, Apple fleet management, and cloud native operations. The site is built and based on using Astro, Vue, and UnoCSS.
 
-## Projects
-
-In addition to blog posts, this repository hosts a projects page showcasing personal and professional development work, including:
-
-*   **Nightcap:** A full-stack web application for cocktail enthusiasts, built with Next.js and FastAPI, featuring an AI recipe generator.
-*   **Okta and AWS Federation:** A project using Terraform to configure SAML 2.0 federation between Okta and AWS for secure SSO.
-*   **FinOps AWS Cost Optimizer:** A macOS menu bar application (in development) for monitoring AWS costs.
-
 ## Tech Stack
 
 *   **Framework:** [Astro](https://astro.build/)
