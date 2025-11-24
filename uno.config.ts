@@ -1,3 +1,4 @@
+// uno.config.ts
 import {
   defineConfig,
   presetAttributify,
@@ -12,19 +13,11 @@ import {
 export default defineConfig({
   shortcuts: [
     {
-      'bg-main': 'bg-hex-eef5fc dark:bg-hex-0d1117',
-      'text-main': 'text-hex-555555 dark:text-hex-bbbbbb',
-      'text-link': 'text-dark dark:text-white ',
-      'border-main': 'border-truegray-300 dark:border-truegray-600',
-    },
-    {
-      'text-title': 'text-link text-4xl font-800',
-      'nav-link': 'text-link opacity-70 hover:opacity-100 transition-opacity duration-200 cursor-pointer',
-      'prose-link': 'text-link text-nowrap cursor-pointer border-b-1 !border-opacity-30 hover:!border-opacity-100 border-neutral-500 hover:border-truegray-600 dark:border-neutral-500 hover:dark:border-truegray-400 transition-border-color duration-200 decoration-none',
-      'container-link': 'p-2 opacity-60 hover:opacity-100 cursor-pointer hover:bg-truegray-500 !bg-opacity-10 transition-colors transition-opacity duration-200',
-    },
-    {
-      'hr-line': 'w-14 mx-auto my-8 border-solid border-1px !border-truegray-200 !dark:border-truegray-800',
+      'new-indicator': 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-red-500/50 bg-red-500/10',
+      'new-dot': 'w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse',
+      'new-text': 'text-red-500 dark:text-red-400 text-xs font-bold uppercase tracking-wide',
+      // Compact version
+      'new-indicator-compact': 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-red-500 bg-red-500/10 flex-shrink-0',
     },
   ],
   presets: [
@@ -59,5 +52,17 @@ export default defineConfig({
     'i-simple-icons-sinaweibo',
     'i-ri-github-line',
     'i-ri-twitter-x-line',
+    'animate-fade-in',
+    // Add line-clamp utilities to safelist
+    'line-clamp-2',
+    'line-clamp-3',
+    'text-truncate',
+    'post-title',
   ],
+  theme: {
+    lineClamp: {
+      2: '2',
+      3: '3',
+    },
+  },
 })

@@ -37,6 +37,13 @@ function isSameYear(a: Date | string | number, b: Date | string | number) {
 function getYear(date: Date | string | number) {
   return new Date(date).getFullYear()
 }
+
+// Function to check if post is "new" (within last 14 days)
+function isNew(postDate: string): boolean {
+  const fourteenDaysAgo = new Date()
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
+  return new Date(postDate) > fourteenDaysAgo
+}
 </script>
 
 <template>
@@ -55,12 +62,21 @@ function getYear(date: Date | string | number) {
       <a text-lg lh-tight nav-link flex="~ col gap-2" :aria-label="post.data.title" :target="getTarget(post)" :href="getHref(post)">
         <div flex="~ col md:row gap-2 md:items-center">
           <div flex="~ gap-2 items-center text-wrap">
-            <span lh-normal>
+            <span lh-normal flex="~ gap-2 items-center">
               <i v-if="post.data.draft" text-base vertical-mid i-ri-draft-line />
               {{ post.data.title }}
             </span>
           </div>
           <div opacity-50 text-sm ws-nowrap flex="~ gap-2 items-center">
+            <!-- New Post Indicator - Cyan Version -->
+            <span
+              v-if="isNew(post.data.date)"
+              class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-cyan-400/60 bg-cyan-400/11"
+            >
+              <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
+              <span class="text-cyan-400 dark:text-cyan-300 text-xs font-bold uppercase tracking-wide">Recent</span>
+            </span>
+
             <i v-if="post.data.redirect" text-base i-ri-external-link-line />
             <i v-if="post.data.recording || post.data.video" text-base i-ri:film-line />
             <time v-if="post.data.date" :datetime="getDate(post.data.date)">{{ post.data.date.split(',')[0] }}</time>

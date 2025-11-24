@@ -9,6 +9,9 @@ export default defineConfig({
   server: {
     port: 1977,
   },
+  redirects: {
+    '/': '/blog',
+  },
   integrations: [
     mdx(),
     sitemap(),
@@ -22,6 +25,7 @@ export default defineConfig({
       themes: {
         light: 'github-light-default',
         dark: 'github-dark-default',
+        theme: 'dracula',
       },
       wrap: true,
     },

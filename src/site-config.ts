@@ -1,41 +1,41 @@
 export const siteConfig = {
-  author: 'Kieran Wang',
-  title: 'Vitesse theme for Astro',
-  subtitle: 'Vitesse theme for Astro, supports Vue and UnoCSS.',
-  description: 'A Minimal, SEO-friendly portfolio and blog theme for Astro.',
+  author: 'Daniel Cruz',
+  title: 'Infra as Thoughts.',
+  subtitle: '',
+  description: '',
   image: {
     src: '/hero.jpg',
     alt: 'Website Main Image',
   },
-  email: 'kieranwme@gmail.com',
+  email: '',
   socialLinks: [
     {
       text: 'GitHub',
-      href: 'https://github.com/kieranwv/astro-theme-vitesse',
+      href: 'https://github.com/DDC-96',
       icon: 'i-simple-icons-github',
       header: 'i-ri-github-line',
     },
-    {
-      text: 'Twitter',
-      href: '',
-      icon: 'i-simple-icons-x',
-      header: 'i-ri-twitter-x-line',
-    },
-    {
-      text: 'Linkedin',
-      href: '',
-      icon: 'i-simple-icons-linkedin',
-    },
-    {
-      text: 'Instagram',
-      href: '',
-      icon: 'i-simple-icons-instagram',
-    },
-    {
-      text: 'Youtube',
-      href: '',
-      icon: 'i-simple-icons-youtube',
-    },
+    // {
+    //   text: 'Twitter',
+    //   href: '',
+    //   icon: 'i-simple-icons-x',
+    //   header: 'i-ri-twitter-x-line',
+    // }, DONT NEED
+    // {
+    //   text: 'Linkedin',
+    //   href: '',
+    //   icon: 'i-simple-icons-linkedin',
+    // },
+    // {
+    //   text: 'Instagram',
+    //   href: '',
+    //   icon: 'i-simple-icons-instagram',
+    // },
+    // {
+    //   text: 'Youtube',
+    //   href: '',
+    //   icon: 'i-simple-icons-youtube',
+    // },
   ],
   header: {
     logo: {
@@ -51,10 +51,10 @@ export const siteConfig = {
         text: 'Notes',
         href: '/blog/notes',
       },
-      {
-        text: 'Talks',
-        href: '/blog/talks',
-      },
+      // {
+      //   text: 'Talks',
+      //   href: '/blog/talks',
+      // },
       {
         text: 'Projects',
         href: '/projects',
@@ -71,30 +71,30 @@ export const siteConfig = {
         text: 'Notes',
         href: '/blog/notes',
       },
-      {
-        text: 'Talks',
-        href: '/blog/talks',
-      },
+      // {
+      //   text: 'Talks',
+      //   href: '/blog/talks',
+      // },
     ],
   },
   footer: {
     navLinks: [
-      {
-        text: 'Posts Props',
-        href: '/posts-props',
-      },
-      {
-        text: 'Markdown Style',
-        href: '/md-style',
-      },
-      {
-        text: 'View on Astro',
-        href: 'https://astro.build/themes/details/vitesse-theme-for-astro/',
-      },
-      {
-        text: 'GitHub Repository',
-        href: 'https://github.com/kieranwv/astro-theme-vitesse',
-      },
+      // {
+      //   text: 'Posts Props',
+      //   href: '/posts-props',
+      // },
+      // {
+      //   text: 'Markdown Style',
+      //   href: '/md-style',
+      // },
+      // {
+      //   text: 'View on Astro',
+      //   href: 'https://astro.build/themes/details/vitesse-theme-for-astro/',
+      // },
+      // {
+      //   text: 'GitHub Repository',
+      //   href: 'https://github.com/kieranwv/astro-theme-vitesse',
+      // },
     ],
   },
 }
