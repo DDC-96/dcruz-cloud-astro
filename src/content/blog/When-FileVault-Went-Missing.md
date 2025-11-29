@@ -91,11 +91,7 @@ PATCH /v1/computers-inventory-detail/{id}
 ```
 That version introduced updates to how computer inventory detail is processed through that endpoint. The unfortunate side effect. In some versions, a partial update that only touched the general section could unintentionally impact FileVault related state.
 
-In the KB I keep for this incident, I include:
-
 - A screenshot of the relevant changelog entry.
-- The affected version range in our environment.
-- A note that renames should use the Classic API until the environment is upgraded beyond the fixed version.
 
  <!-- Your image with zoom functionality -->
 <img src="/jamf-bug-2.png" alt="" style="width:100%;"

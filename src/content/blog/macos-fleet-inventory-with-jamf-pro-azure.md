@@ -6,29 +6,31 @@ duration: 10min
 
 ## Introduction
 
-When I joined the team at my current employer, this project arrived as a pretty harmless sounding backlog ticket:
+When I joined one of my previous teams, I was working through my onboarding backlog in Jira and one ticket immediately stood out. On paper it looked like a small bugfix, but it was actually part of an internal EDR/endpoint bootstrap pipeline that tied Jamf Pro, Azure Log Analytics, and our SOC 2 reporting together. The engineer who originally owned the macOS inventory piece had already left, so the context walked out the door with them.
 
-"Existing macOS script posts device data posture to Azure. Needs a bit of polish before we use it for SOC 2 reporting."
+"Our in house macOS script posts device posture data into Azure for SOC 2 reporting. It’s breaking and needs to be fixed before ($COMPANY) SOC 2 audit. Connect with auditing/security to get the rundown."
 
-In my head, that meant a quick cleanup. Fix a path, rename a few variables, write it into a Jamf policy, re-trigger it, and move on.
+In my head, this automatically translated to a quick cleanup: fix a couple of paths, rename some variables, wire it into a Jamf policy, rerun it, and call it done.
 
-What I actually inherited was a dev script that only worked on part of the fleet, silently broke on the rest, and sat in the middle of a pipeline that security and auditors already expected to trust.
+What I actually inherited was a dev-only script that worked on a subset of Macs, silently failed on the rest, and sat in the middle of a device posture pipeline that security and auditors already assumed was reliable.
 
-This write up walks through how I turned that script into a production ready, architecture aware reporting workflow that keeps our Jamf managed macOS devices visible inside Azure alongside our subset of Windows devices.
+This write-up walks through how I turned that script into a production ready, architecture-aware reporting workflow that keeps our Jamf-managed macOS fleet visible inside Azure Log Analytics alongside our Windows devices, with consistent schema, predictable behavior, and enough observability to trust it during an audit.
 
 ## Problem Statement and Constraints
 
-The business requirement was straightforward. Security and auditors needed a unified device inventory view in Azure that included both Windows and macOS. For each endpoint, they cared about attributes like OS version, hardware model, serial number, and a set of compliance related fields.
+The business requirement was straightforward. Security and auditors needed a unified device inventory view in Azure that included both Windows and macOS. For each endpoint, they cared about attributes like OS version, hardware model, serial number, and a small set of compliance related fields.
 
-At this point in the project, tools like Workbrew were very much on the table. Workbrew sits on top of Homebrew and turns it into a secure software delivery platform, with an agent and console that let you standardize, audit, and remotely manage brew packages across a fleet. It is basically a control plane for Homebrew at enterprise scale, with policy enforcement, inventory, and remote execution built in. A no brainer when it comes to dealing with Homebrew. We spun up a sandbox instance and tested it in a dev environment, and it fit nicely with how we were already thinking about developer tooling and MDM. From a management perspective, using something like Workbrew to keep Homebrew and Homebrew packages in line would have been the cleanest option.
+A natural question here is. Why not just lean on an EDR or a heavyweight endpoint platform for this data. Tools like CrowdStrike, Defender for Endpoint, Intune device compliance, or other full EDR stacks can absolutely push rich telemetry into SIEMs and data lakes. In our case, I learned those conversations were either still in flight, already scoped for a different use case for some reason, or not financially realistic for the scale of what we were trying to do. We needed something that worked with the stack we had that quarter. Jamf Pro, Azure, and an existing Logic App and schema, without waiting on a new platform evaluation or license cycle.
 
-Budget constraints took that path off the table for the moment, though. Instead of buying a managed Homebrew control plane, I had to treat this as an engineering problem. The constraint became the design: build a reporting focused automation that we fully own, that runs from Jamf Pro, and that gives Azure the same quality of device inventory signal without adding a new platform to the bill.
+At this point in the project, tools like Workbrew were also on the table. Workbrew sits on top of Homebrew and turns it into a secure software delivery platform, with an agent and console that let you standardize, audit, and remotely manage brew packages across a fleet. It is basically a control plane for Homebrew at enterprise scale, with policy enforcement, inventory, and remote execution built in. A no brainer when it comes to dealing with Homebrew in your org. We spun up a sandbox instance and tested it in a dev environment, and it fit nicely with how we were already thinking about developer tooling and MDM. From a management perspective, using something like Workbrew to keep Homebrew and Homebrew packages in line would have been the cleanest option.
+
+Budget constraints took that path off the table for the moment, though. Instead of buying a managed Homebrew control plane, I had to treat this as an engineering problem. The constraint became the design. Finish and build a reporting focused automation that we fully own, that runs from Jamf Pro, and that gives Azure the same quality of device inventory signal without adding a new platform to the bill.
 
 Windows was already covered. Agents on that side of the house sent structured data into Azure using an existing schema. macOS was the missing half. The inherited script was supposed to close that gap by running from Jamf Pro and POSTing JSON into an Azure Logic App that wrote to Log Analytics.
 
-When I picked it up, the script had some clear issues. It effectively supported a single architecture, so part of the fleet never reported in at all. It assumed Homebrew and jo were installed in specific paths. It produced JSON that mostly matched the schema, but types and null handling were inconsistent. It also never surfaced the final payload anywhere operators actually look when debugging, which made it hard to trust.
+When I picked it up, the script had some clear issues. It effectively supported a single architecture, so part of the fleet never reported in at all. It produced JSON that mostly matched the schema, but types and null handling were inconsistent. It also never surfaced the final payload anywhere operators actually look when debugging, which made it hard to trust.
 
-All of this was happening while we were already in SOC 2 conversations. That meant this pipeline was not a side project. It was part of our compliance story, and it had to behave like one.
+All of this was happening while we were already in SOC 2 conversations. That meant, I had to finish what someone else started.
 
 ## Requirements and Design Goals
 
